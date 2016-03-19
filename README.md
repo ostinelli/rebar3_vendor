@@ -5,9 +5,7 @@ Plugin for storing vendored depdenencies and applying the vendored deps to your 
 
 Add the plugin to your rebar config:
 
-    {plugins, [
-        {rebar3_vendor, {git, "https://github.com/tsloughter/rebar3_vendor.git", {branch, "master"}}}
-    ]}.
+    {plugins, [rebar3_vendor]}.
 
 
 To store the fetched dependencies under `./deps/` for committing:
