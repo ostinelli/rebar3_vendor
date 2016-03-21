@@ -1,7 +1,7 @@
 Rebar3 Vendoring Plugin
 =====
 
-Plugin for storing vendored depdenencies and applying the vendored deps to your local project.
+Plugin for storing vendored dependencies and applying the vendored deps to your local project.
 
 Add the plugin to your rebar config:
 
