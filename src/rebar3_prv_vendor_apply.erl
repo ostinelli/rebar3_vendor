@@ -31,7 +31,7 @@ do(State) ->
     DepsDir = rebar_dir:deps_dir(State),
     VendorDir = filename:join(rebar_dir:root_dir(State), "deps"),
     filelib:ensure_dir(filename:join(DepsDir, "dummy.beam")),
-    rebar_file_utils:cp_r(filelib:wildcard(filename:join(VendorDir, "*")), DepsDir),
+    [zip:extract(Filepath, [{cwd, DepsDir}]) || Filepath <- filelib:wildcard(filename:join(VendorDir, "*.zip"))],
     {ok, State}.
 
 -spec format_error(any()) ->  iolist().

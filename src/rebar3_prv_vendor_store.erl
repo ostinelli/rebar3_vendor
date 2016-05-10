@@ -29,11 +29,14 @@ init(State) ->
 do(State) ->
     rebar_api:info("Vendoring dependencies...", []),
     AllDeps = rebar_state:lock(State),
+    DepsDir = rebar_dir:deps_dir(State),
     VendorDir = filename:join(rebar_dir:root_dir(State), "deps"),
     [begin
-         Dir = rebar_app_info:dir(Dep),
          filelib:ensure_dir(filename:join([VendorDir, "dummy.beam"])),
-         rebar_file_utils:cp_r([Dir], VendorDir)
+         DepName = binary_to_list(rebar_app_info:name(Dep)),
+         Filename = iolist_to_binary([DepName,"-", rebar_app_info:original_vsn(Dep),".zip"]),
+         Filepath = filename:join([VendorDir, Filename]),
+         {ok, _} = zip:create(Filepath, [DepName], [{cwd, DepsDir}])
      end || Dep <- AllDeps, not(rebar_app_info:is_checkout(Dep))],
 
     {ok, State}.
