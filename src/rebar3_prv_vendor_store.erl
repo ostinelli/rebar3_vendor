@@ -31,6 +31,7 @@ do(State) ->
     AllDeps = rebar_state:lock(State),
     DepsDir = rebar_dir:deps_dir(State),
     VendorDir = filename:join(rebar_dir:root_dir(State), "deps"),
+    [file:delete(Filepath) || Filepath <- filelib:wildcard(filename:join(VendorDir, "*.zip"))],
     [begin
          filelib:ensure_dir(filename:join([VendorDir, "dummy.beam"])),
          DepName = binary_to_list(rebar_app_info:name(Dep)),
