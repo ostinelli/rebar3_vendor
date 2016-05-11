@@ -1,15 +1,11 @@
-{application, rebar3_vendor,
- [{description, "Rebar3 plugin for vendoring dependencies."},
-  {vsn, "0.1.0"},
-  {registered, []},
-  {applications,
-   [kernel,
-    stdlib
-   ]},
-  {env,[]},
-  {modules, []},
-
-  {maintainers, ["Tristan Sloughter"]},
-  {licenses, ["Apache 2"]},
-  {links, [{"Github", "http://github.com/tsloughter/rebar3_vendor"}]}
- ]}.
+{application,rebar3_vendor,
+             [{description,"Rebar3 plugin for vendoring dependencies."},
+              {vsn,"0.2.0"},
+              {registered,[]},
+              {applications,[kernel,stdlib]},
+              {env,[]},
+              {modules,[]},
+              {maintainers,["Tristan Sloughter"]},
+              {licenses,["Apache 2"]},
+              {links,[{"Github",
+                       "http://github.com/tsloughter/rebar3_vendor"}]}]}.
