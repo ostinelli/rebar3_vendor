@@ -5,9 +5,9 @@
     {applications, [kernel, stdlib]},
     {env, []},
     {modules, []},
-    {maintainers, ["Tristan Sloughter"]},
-    {licenses, ["Apache 2"]},
+    {maintainers, ["Roberto Ostinelli"]},
+    {licenses, ["MIT"]},
     {links, [
-        {"Github", "http://github.com/tsloughter/rebar3_vendor"}
+        {"Github", "http://github.com/ostinelli/rebar3_vendor"}
     ]}
 ]}.
