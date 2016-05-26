@@ -1,17 +1,23 @@
-Rebar3 Vendoring Plugin
-=====
+# Rebar3 Vendoring Plugin
 
 Plugin for storing vendored dependencies and applying the vendored deps to your local project.
 
-Add the plugin to your rebar config:
+## Install
+Add the plugin to your rebar config, which should be at `~/.config/rebar3/rebar.config`:
 
-    {plugins, [rebar3_vendor]}.
+```erlang
+{plugins, [rebar3_vendor]}.
+```
 
-
+## Usage
 To store the fetched dependencies under `./deps/` for committing:
 
-    $ rebar3 vendor store
+```
+$ rebar3 vendor store
+```
 
 To take the vendored dependencies from `./deps/` and place them under the build directory in the appropriate place:
 
-    $ rebar3 vendor apply
+```
+$ rebar3 vendor apply
+```
