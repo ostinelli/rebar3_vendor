@@ -43,6 +43,8 @@ do(State) ->
         %% prepare filename
         Filename = iolist_to_binary([Name, "-", Vsn, ".zip"]),
         Filepath = binary_to_list(filename:join([VendorDir, Filename])),
+        %% purge other versions if they exist
+        purge_other_versions(VendorDir, Filepath, Name),
         %% create zip if doesn't exist
         create_zip_if_not_exist(DepsDir, Filepath, Name)
     end || Dep <- AllDeps, not(rebar_app_info:is_checkout(Dep))],
@@ -69,6 +71,14 @@ get_vsn(Dep, State) ->
         {git, _, {ref, Ref}} -> Ref;
         {pkg, _, Vsn0} -> Vsn0
     end.
+
+-spec purge_other_versions(file:filename_all(), file:filename_all(), binary() | string()) -> list().
+purge_other_versions(VendorDir, Filepath, Name) ->
+    OtherFilepathPattern = filelib:wildcard(filename:join(VendorDir, string:concat(Name, "-*.zip"))),
+    [begin
+        rebar_api:info("   - ~s", [filename:basename(OtherFilepath, ".zip")]),
+        ok = file:delete(OtherFilepath)
+    end || OtherFilepath <- OtherFilepathPattern, OtherFilepath =/= Filepath].
 
 create_zip_if_not_exist(DepsDir, Filepath, Name) ->
     case filelib:is_file(Filepath) of
