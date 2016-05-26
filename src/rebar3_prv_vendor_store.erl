@@ -4,7 +4,7 @@
 
 -define(PROVIDER, store).
 -define(NAMESPACE, vendor).
--define(DEPS, [{default, lock}]).
+-define(DEPS, [{default, install_deps}, {default, lock}]).
 
 %% ===================================================================
 %% Public API
