@@ -12,15 +12,15 @@
 -spec init(rebar_state:t()) -> {ok, rebar_state:t()}.
 init(State) ->
     Provider = providers:create([
-            {name, ?PROVIDER},            % The 'user friendly' name of the task
-            {module, ?MODULE},            % The module implementation of the task
-            {namespace, ?NAMESPACE},
-            {bare, true},                 % The task can be run by the user, always true
-            {deps, ?DEPS},                % The list of dependencies
-            {example, "rebar3 vendor store"}, % How to use the plugin
-            {opts, []},                   % list of options understood by the plugin
-            {short_desc, "Makes a copy of dependencies to deps/ for vendoring."},
-            {desc, ""}
+        {name, ?PROVIDER},
+        {module, ?MODULE},
+        {namespace, ?NAMESPACE},
+        {bare, true},
+        {deps, ?DEPS},
+        {example, "rebar3 vendor store"},
+        {opts, []},
+        {short_desc, "Makes a copy of dependencies to deps/ for vendoring."},
+        {desc, ""}
     ]),
     {ok, rebar_state:add_provider(State, Provider)}.
 
@@ -51,7 +51,7 @@ do(State) ->
     %% return
     {ok, State}.
 
--spec format_error(any()) ->  iolist().
+-spec format_error(any()) -> iolist().
 format_error(Reason) ->
     io_lib:format("~p", [Reason]).
 
