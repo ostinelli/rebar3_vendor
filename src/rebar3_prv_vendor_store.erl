@@ -27,21 +27,55 @@ init(State) ->
 
 -spec do(rebar_state:t()) -> {ok, rebar_state:t()} | {error, string()}.
 do(State) ->
-    rebar_api:info("Vendoring dependencies...", []),
+    %% init
     AllDeps = rebar_state:lock(State),
     DepsDir = rebar_dir:deps_dir(State),
     VendorDir = filename:join(rebar_dir:root_dir(State), "deps"),
-    [file:delete(Filepath) || Filepath <- filelib:wildcard(filename:join(VendorDir, "*.zip"))],
+    filelib:ensure_dir(filename:join([VendorDir, "dummy.beam"])),
+    %% clean deps to ensure that no compile code is included
+    clean_all_deps(State),
+    %% zip all dependencies in the /deps directory
+    rebar_api:info("Vendoring dependencies...", []),
     [begin
-         filelib:ensure_dir(filename:join([VendorDir, "dummy.beam"])),
-         DepName = binary_to_list(rebar_app_info:name(Dep)),
-         Filename = iolist_to_binary([DepName,"-", rebar_app_info:original_vsn(Dep),".zip"]),
-         Filepath = filename:join([VendorDir, Filename]),
-         {ok, _} = zip:create(Filepath, [DepName], [{cwd, DepsDir}])
-     end || Dep <- AllDeps, not(rebar_app_info:is_checkout(Dep))],
-
+    %% get info
+        Name = binary_to_list(rebar_app_info:name(Dep)),
+        Vsn = get_vsn(Dep, State),
+        %% prepare filename
+        Filename = iolist_to_binary([Name, "-", Vsn, ".zip"]),
+        Filepath = binary_to_list(filename:join([VendorDir, Filename])),
+        %% create zip if doesn't exist
+        create_zip_if_not_exist(DepsDir, Filepath, Name)
+    end || Dep <- AllDeps, not(rebar_app_info:is_checkout(Dep))],
+    %% return
     {ok, State}.
 
 -spec format_error(any()) ->  iolist().
 format_error(Reason) ->
     io_lib:format("~p", [Reason]).
+
+-spec clean_all_deps(rebar_state:t()) -> ok.
+clean_all_deps(State) ->
+    %% temporary hack: add the 'all' option to be able to clean all dependencies
+    {Args, Other} = rebar_state:command_parsed_args(State),
+    State1 = rebar_state:command_parsed_args(State, {Args ++ [{all, true}], Other}),
+    {ok, _} = rebar_prv_clean:do(State1),
+    ok.
+
+-spec get_vsn(rebar_app_info:t(), rebar_state:t()) -> binary() | string().
+get_vsn(Dep, State) ->
+    Dir = rebar_app_info:dir(Dep),
+    Source = rebar_app_info:source(Dep),
+    case rebar_fetch:lock_source(Dir, Source, State) of
+        {git, _, {ref, Ref}} -> Ref;
+        {pkg, _, Vsn0} -> Vsn0
+    end.
+
+create_zip_if_not_exist(DepsDir, Filepath, Name) ->
+    case filelib:is_file(Filepath) of
+        true ->
+            rebar_api:debug("Skipping ~s: already vendored.", [filename:basename(Filepath, ".zip")]);
+        false ->
+            %% create zip   ===>
+            rebar_api:info("   + ~s", [filename:basename(Filepath, ".zip")]),
+            {ok, _} = zip:create(Filepath, [Name], [{cwd, DepsDir}])
+    end.
