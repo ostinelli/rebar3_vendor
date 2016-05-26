@@ -28,10 +28,18 @@ init(State) ->
 -spec do(rebar_state:t()) -> {ok, rebar_state:t()} | {error, string()}.
 do(State) ->
     rebar_api:info("Applying vendored dependencies...", []),
+    %% init
     DepsDir = rebar_dir:deps_dir(State),
     VendorDir = filename:join(rebar_dir:root_dir(State), "deps"),
+    %% empty lib directory
+    rebar_file_utils:rm_rf(DepsDir),
     filelib:ensure_dir(filename:join(DepsDir, "dummy.beam")),
-    [zip:extract(Filepath, [{cwd, DepsDir}]) || Filepath <- filelib:wildcard(filename:join(VendorDir, "*.zip"))],
+    %% extract
+    [begin
+        Filename = filename:basename(Filepath, ".zip"),
+        rebar_api:info("Extracting ~s", [Filename]),
+        zip:extract(Filepath, [{cwd, DepsDir}])
+    end || Filepath <- filelib:wildcard(filename:join(VendorDir, "*.zip"))],
     {ok, State}.
 
 -spec format_error(any()) ->  iolist().
