@@ -69,7 +69,8 @@ get_vsn(Dep, State) ->
     Source = rebar_app_info:source(Dep),
     case rebar_fetch:lock_source(Dir, Source, State) of
         {git, _, {ref, Ref}} -> Ref;
-        {pkg, _, Vsn0} -> Vsn0
+        {pkg, _, Vsn0} -> Vsn0;
+        {pkg, _, Vsn0, _} -> Vsn0
     end.
 
 -spec purge_other_versions(file:filename_all(), file:filename_all(), binary() | string()) -> list().
