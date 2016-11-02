@@ -1,6 +1,6 @@
 {application, rebar3_vendor, [
     {description, "Rebar3 plugin for vendoring dependencies."},
-    {vsn, "0.3.0"},
+    {vsn, "0.3.1"},
     {registered, []},
     {applications, [kernel, stdlib]},
     {env, []},
