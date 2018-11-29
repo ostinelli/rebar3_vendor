@@ -1,3 +1,5 @@
+[![Hex pm](https://img.shields.io/hexpm/v/rebar3_vendor.svg)](https://hex.pm/packages/rebar3_vendor)
+
 # Rebar3 Vendoring Plugin
 
 Plugin for storing vendored dependencies and applying the vendored deps to your local project.
