@@ -36,10 +36,10 @@ do(State) ->
     filelib:ensure_dir(filename:join(DepsDir, "dummy.beam")),
     %% extract
     [begin
-        Filename = filename:basename(Filepath, ".zip"),
-        rebar_api:info("Extracting ~s", [Filename]),
-        zip:extract(Filepath, [{cwd, DepsDir}])
-    end || Filepath <- filelib:wildcard(filename:join(VendorDir, "*.zip"))],
+         Filename = filename:basename(Filepath, ".zip"),
+         rebar_api:info("Extracting ~s", [Filename]),
+         zip:extract(Filepath, [{cwd, DepsDir}])
+     end || Filepath <- filelib:wildcard(filename:join(VendorDir, "*.zip"))],
     {ok, State}.
 
 -spec format_error(any()) -> iolist().
