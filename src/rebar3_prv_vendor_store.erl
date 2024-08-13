@@ -68,7 +68,9 @@ get_vsn(Dep, State) ->
     case rebar_fetch:lock_source(Dep, State) of
         {git, _, {ref, Ref}} -> Ref;
         {pkg, _, Vsn0} -> Vsn0;
-        {pkg, _, Vsn0, _} -> Vsn0
+        {pkg, _, Vsn0, _} -> Vsn0;
+        {pkg, _, Vsn0, _, _} -> Vsn0;
+        {iex_dep, _, Vsn0} -> Vsn0
     end.
 
 -spec purge_other_versions(file:filename_all(), file:filename_all(), binary() | string()) -> list().
